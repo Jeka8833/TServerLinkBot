@@ -3,7 +3,6 @@ plugins {
 }
 
 group 'com.Jeka8833'
-version '1.0-SNAPSHOT'
 
 repositories {
     mavenCentral()
@@ -16,6 +15,14 @@ dependencies {
     // https://mvnrepository.com/artifact/org.telegram/telegrambots
     implementation group: 'org.telegram', name: 'telegrambots', version: '6.1.0'
 
+    // Fix telegram vulnerability
+    // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.13.4.2'
+
+    // Fix telegram vulnerability
+    // https://mvnrepository.com/artifact/commons-codec/commons-codec
+    implementation group: 'commons-codec', name: 'commons-codec', version: '1.13'
+
     // https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core
     implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.19.0'
 
@@ -24,6 +31,7 @@ dependencies {
 }
 
 jar {
+    archivesBaseName="LinkBot"
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     manifest {
         attributes["Manifest-Version"] = "1.0"
