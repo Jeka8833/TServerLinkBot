@@ -13,7 +13,7 @@ public class KPI {
     public static List<Lesson> lessons;
 
     public static void init() {
-        lessons = Arrays.asList(Main.GSON.fromJson(SavedBD.data, Lesson[].class));
+        lessons = Arrays.asList(Main.GSON.fromJson(SavedDB.data, Lesson[].class));
     }
 
     private static void updateTime() {
