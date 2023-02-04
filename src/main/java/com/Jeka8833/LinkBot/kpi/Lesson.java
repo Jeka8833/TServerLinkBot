@@ -1,6 +1,10 @@
 package com.Jeka8833.LinkBot.kpi;
 
-import com.Jeka8833.LinkBot.Util;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 
 public class Lesson implements Comparable<Lesson> {
 
@@ -17,17 +21,21 @@ public class Lesson implements Comparable<Lesson> {
     public boolean online;
     public boolean choice;
 
-    public int timeToStart() {
-        return Util.parseTime(time_start);
+    @NotNull
+    @Contract(" -> new")
+    public LocalTime timeToStart() {
+        return LocalTime.parse(time_start, DateTimeFormatter.ofPattern("H:m:s"));
     }
 
-    public int timeToEnd() {
-        return Util.parseTime(time_end);
+    @NotNull
+    @Contract(" -> new")
+    public LocalTime timeToEnd() {
+        return LocalTime.parse(time_end, DateTimeFormatter.ofPattern("H:m:s"));
     }
 
     @Override
-    public int compareTo(Lesson o) {
-        return lesson_number;
+    public int compareTo(@NotNull Lesson o) {
+        return Integer.compare(lesson_number, o.lesson_number);
     }
 
     @Override

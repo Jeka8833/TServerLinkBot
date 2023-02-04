@@ -24,7 +24,7 @@ public class Setting implements Command {
         }
         final String[] args = text.split(" ");
         switch (args[0].toLowerCase()) {
-            case "weekshift":
+            case "weekshift" -> {
                 try {
                     LinkBotDB.shiftWeek = Integer.parseInt(args[1]);
                     LinkBotDB.write(LinkBotDB.Table.SETTING);
@@ -32,8 +32,8 @@ public class Setting implements Command {
                 } catch (Exception ex) {
                     Util.sendMessage(pollingBot, update.getMessage().getChatId() + "", "Произошла ошибка");
                 }
-                break;
-            case "onnotification":
+            }
+            case "onnotification" -> {
                 try {
                     LinkBotDB.onNotification = Integer.parseInt(args[1]);
                     LinkBotDB.write(LinkBotDB.Table.SETTING);
@@ -41,8 +41,8 @@ public class Setting implements Command {
                 } catch (Exception ex) {
                     Util.sendMessage(pollingBot, update.getMessage().getChatId() + "", "Произошла ошибка");
                 }
-                break;
-            case "addlink":
+            }
+            case "addlink" -> {
                 try {
                     LinkBotDB.urls.put(Integer.parseInt(args[1]), args[2]);
                     LinkBotDB.write(LinkBotDB.Table.LINK);
@@ -50,8 +50,8 @@ public class Setting implements Command {
                 } catch (Exception ex) {
                     Util.sendMessage(pollingBot, update.getMessage().getChatId() + "", "Произошла ошибка");
                 }
-                break;
-            case "reload":
+            }
+            case "reload" -> {
                 try {
                     KPI.init();
                     LinkBotDB.read();
@@ -59,14 +59,13 @@ public class Setting implements Command {
                 } catch (Exception throwables) {
                     Util.sendMessage(pollingBot, update.getMessage().getChatId() + "", "Произошла ошибка");
                 }
-                break;
-            default:
-                Util.sendMessage(pollingBot, update.getMessage().getChatId() + "", """
-                        Команды:
-                        - weekShift [int]
-                        - onnotification [int]
-                        - addLink [int(Key)] [String(link)]
-                        - reload""");
+            }
+            default -> Util.sendMessage(pollingBot, update.getMessage().getChatId() + "", """
+                    Команды:
+                    - weekShift [int]
+                    - onnotification [int]
+                    - addLink [int(Key)] [String(link)]
+                    - reload""");
         }
     }
 }

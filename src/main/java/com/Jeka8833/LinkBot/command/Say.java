@@ -26,12 +26,12 @@ public class Say implements Command {
         }
         final String[] args = text.split(" ", 2);
         switch (args[0].toLowerCase()) {
-            case "text":
+            case "text" -> {
                 for (User user : LinkBotDB.users) {
                     Util.sendMessage(pollingBot, String.valueOf(user.chatId), args[1]);
                 }
-                break;
-            case "lesson":
+            }
+            case "lesson" -> {
                 final int id = Integer.parseInt(args[1]);
                 Lesson lesson = null;
                 for (Lesson search : KPI.lessons) {
@@ -51,12 +51,11 @@ public class Say implements Command {
                             "\nПреподаватель: " + lesson.teacher_name +
                             "\nСсылка: " + LinkBotDB.urls.getOrDefault(lesson.lesson_id, "-"));
                 }
-                break;
-            default:
-                Util.sendMessage(pollingBot, update.getMessage().getChatId() + "", """
-                        Команды:
-                        - text [Text]
-                        - lesson [int]""");
+            }
+            default -> Util.sendMessage(pollingBot, update.getMessage().getChatId() + "", """
+                    Команды:
+                    - text [Text]
+                    - lesson [int]""");
         }
     }
 }

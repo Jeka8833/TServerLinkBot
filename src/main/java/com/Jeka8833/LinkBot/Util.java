@@ -3,15 +3,17 @@ package com.Jeka8833.LinkBot;
 import com.Jeka8833.LinkBot.dataBase.LinkBotDB;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
+import java.time.DayOfWeek;
+import java.time.Duration;
+
 public class Util {
     private static final Logger LOGGER = LogManager.getLogger(Util.class);
-
-    private static final String[] DAY_NAME = {"*Воскресенье:*", "*Понедельник:*", "*Вторник:*",
-            "*Среда:*", "*Четверг:*", "*Пятница:*", "*Суббота:*"};
 
     public static void sendMessage(final TelegramLongPollingBot bot, final String chatId, final String text) {
         var message = new SendMessage();
@@ -29,20 +31,21 @@ public class Util {
         return LinkBotDB.users.stream().anyMatch(user -> user.isAdmin && user.chatId == userId);
     }
 
+    @NotNull
+    @Contract(pure = true, value = "_->new")
+    public static String toString(@NotNull Duration duration) {
+        long HH = duration.toHours();
+        int MM = duration.toMinutesPart();
+        int SS = duration.toSecondsPart();
+        return String.format("%02d:%02d:%02d", HH, MM, SS);
+    }
+
     public static User getUser(final long userId) {
         for (User user : LinkBotDB.users)
             if (user.chatId == userId)
                 return user;
         return null;
     }
-
-    public static String toTimeFormat(final int second) {
-        int hours = second / 3600;
-        int mins = second / 60 % 60;
-        int secs = second % 60;
-        return (hours < 10 ? "0" : "") + hours + ":" + (mins < 10 ? "0" : "") + mins + ":" + (secs < 10 ? "0" : "") + secs;
-    }
-
 
     public static String getParam(final String[] args, final String key) {
         for (int i = 0; i < args.length - 1; i++)
@@ -51,10 +54,6 @@ public class Util {
         return System.getenv(key.substring(1).toUpperCase());
     }
 
-    public static int parseTime(final String time) {
-        final String[] arg = time.split(":");
-        return Integer.parseInt(arg[0]) * 60 * 60 + Integer.parseInt(arg[1]) * 60 + Integer.parseInt(arg[2]);
-    }
 
     public static byte[] hexStringToByteArray(String s) {
         if (s == null)
@@ -80,7 +79,15 @@ public class Util {
         return new String(hexChars);
     }
 
-    public static String getDayName(final int day) {
-        return DAY_NAME[day];
+    public static String translateDayOfWeek(@NotNull DayOfWeek dayOfWeek) {
+        return switch (dayOfWeek) {
+            case MONDAY -> "*Понедельник:*";
+            case TUESDAY -> "*Вторник:*";
+            case WEDNESDAY -> "*Среда:*";
+            case THURSDAY -> "*Четверг:*";
+            case FRIDAY -> "*Пятница:*";
+            case SATURDAY -> "*Суббота:*";
+            case SUNDAY -> "*Воскресенье:*";
+        };
     }
 }

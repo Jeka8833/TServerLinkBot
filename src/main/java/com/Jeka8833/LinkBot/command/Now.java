@@ -34,32 +34,36 @@ public class Now implements Command {
             Util.sendMessage(pollingBot, update.getMessage().getChatId() + "",
                     "Сегодня пар не будет, если хочешь узнать пару на следующий день, напиши /next");
         } else {
-            StringBuilder sb = new StringBuilder("Расписание на " + Util.getDayName(KPI.getDay()) + "\n");
-            int maxLessonsPerDay = lessons.stream()
-                    .mapToInt(value -> value.lesson_number)
-                    .min().orElse(0);
+            StringBuilder sb = new StringBuilder("Расписание на " +
+                    Util.translateDayOfWeek(KPI.nowDate().getDayOfWeek()) + "\n");
 
-            for (int i = 1; i < maxLessonsPerDay; i++) {
-                sb.append("♦️Пара: ").append(i).append("\n> Нема\n\n");
-            }
+            int maxLessonNumber = KPI.maxLessonNumber(lessons);
+            for (int i = 1; i <= maxLessonNumber; i++) {
+                boolean found = false;
+                for (Lesson lesson : lessons) {
+                    if (lesson.lesson_number != i) continue;
+                    if (lesson.timeToStart().isAfter(KPI.nowTime()))
+                        sb.append("\uD83D\uDD39");
+                    else if (lesson.timeToEnd().isBefore(KPI.nowTime()))
+                        sb.append("♦️");
+                    else
+                        sb.append("\uD83D\uDD38");
 
-            for (Lesson lesson : lessons) {
-                if (lesson.timeToStart() > KPI.getTimeInSecond())
-                    sb.append("\uD83D\uDD39");
-                else if (lesson.timeToEnd() < KPI.getTimeInSecond())
-                    sb.append("♦️");
-                else
-                    sb.append("\uD83D\uDD38");
-                sb.append("Пара: ").append(lesson.lesson_number).append("(").append(lesson.time_start).append(" - ")
-                        .append(lesson.time_end).append(")")
-                        .append("\nНазвание: ").append(lesson.lesson_name)
-                        .append("\nТип: ").append(lesson.lesson_type)
-                        .append(lesson.online ? " Онлайн" : "")
-                        .append(lesson.choice ? " Факультатив" : "")
-                        .append("\nПреподаватель: ").append(lesson.teacher_name)
-                        .append(lesson.online ? "\nСсылка: " + LinkBotDB.urls.getOrDefault(lesson.lesson_id, "-")
-                                : "\nАудитория: " + lesson.lesson_class).append("\n\n");
+                    sb.append("Пара: ").append(lesson.lesson_number).append("(").append(lesson.time_start).append(" - ")
+                            .append(lesson.time_end).append(")")
+                            .append("\nНазвание: ").append(lesson.lesson_name)
+                            .append("\nТип: ").append(lesson.lesson_type)
+                            .append(lesson.online ? " Онлайн" : "")
+                            .append(lesson.choice ? " Факультатив" : "")
+                            .append("\nПреподаватель: ").append(lesson.teacher_name)
+                            .append(lesson.online ? "\nСсылка: " + LinkBotDB.urls.getOrDefault(lesson.lesson_id, "-")
+                                    : "\nАудитория: " + lesson.lesson_class).append("\n\n");
 
+                    found = true;
+                }
+                if (!found) {
+                    sb.append("♦️Пара: ").append(i).append("\n> Нема\n\n");
+                }
             }
             Util.sendMessage(pollingBot, user.chatId + "", sb.toString());
         }

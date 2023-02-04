@@ -9,6 +9,8 @@ import org.apache.logging.log4j.Logger;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
+import java.time.Duration;
+import java.time.LocalTime;
 import java.util.*;
 
 public class BotSetup extends TelegramLongPollingBot {
@@ -42,26 +44,24 @@ public class BotSetup extends TelegramLongPollingBot {
             @Override
             public void run() {
                 if (LinkBotDB.onNotification != 0) {
+                    final LocalTime time = KPI.nowTime();
+
                     final List<Lesson> lessons = KPI.getDayLessons();
-                    if (lessons.isEmpty())
-                        return;
+                    if (lessons.isEmpty()) return;
 
-                    List<Integer> secondList = new ArrayList<>(lessons.size());
-                    final int time = KPI.getTimeInSecond();
-
-                    for (Lesson lesson : lessons) {
-                        secondList.add((lesson.timeToStart() - time) / 60);
-                    }
+                    final List<Duration> lessonDuration = lessons.stream()
+                            .map(lesson -> Duration.between(time, lesson.timeToStart()))
+                            .toList();
 
                     for (User user : LinkBotDB.users) {
-                        if (user.notification == 0)
-                            continue;
+                        if (user.notification == 0) continue;
+
                         boolean send = false;
-                        for (int i = 0; i < secondList.size(); i++) {
-                            if (user.notification == secondList.get(i)) {
+                        for (int i = 0; i < lessonDuration.size(); i++) {
+                            if (user.notification == lessonDuration.get(i).toMinutes()) {
                                 final Lesson lesson = lessons.get(i);
-                                if (user.isSkipLesson(lesson.lesson_id))
-                                    continue;
+                                if (user.isSkipLesson(lesson.lesson_id)) continue;
+
                                 Util.sendMessage(pollingBot, user.chatId + "", "Скоро будет пара:" +
                                         "\nПара: " + lesson.lesson_number + "(" + lesson.time_start + " - " + lesson.time_end + ")" +
                                         "\nНазвание: " + lesson.lesson_name +

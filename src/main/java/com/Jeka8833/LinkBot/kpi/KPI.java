@@ -2,49 +2,80 @@ package com.Jeka8833.LinkBot.kpi;
 
 import com.Jeka8833.LinkBot.Main;
 import com.Jeka8833.LinkBot.dataBase.LinkBotDB;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Range;
 
-import java.util.*;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.ZoneId;
+import java.time.temporal.WeekFields;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Locale;
 
 public class KPI {
 
-    private static final TimeZone TIME_ZONE = TimeZone.getTimeZone("Europe/Kiev");
-    public static Calendar calendar = Calendar.getInstance(TIME_ZONE);
+    public static final int MAX_CLASS_WEEKS = 2;
 
+    private static final ZoneId ZONE_ID = ZoneId.of("Europe/Kiev");
     public static List<Lesson> lessons;
 
     public static void init() {
         lessons = Arrays.asList(Main.GSON.fromJson(SavedDB.data, Lesson[].class));
     }
 
-    private static void updateTime() {
-        calendar = Calendar.getInstance(TIME_ZONE);
+    @NotNull
+    @Contract(" -> new")
+    public static LocalDate nowDate() {
+        return LocalDate.now(ZONE_ID);
     }
 
-    public static int getTimeInSecond() {
-        updateTime();
-        return calendar.get(Calendar.HOUR_OF_DAY) * 3600 + calendar.get(Calendar.MINUTE) * 60 + calendar.get(Calendar.SECOND);
+    @NotNull
+    @Contract(" -> new")
+    public static LocalTime nowTime() {
+        return LocalTime.now(ZONE_ID);
     }
 
-    public static int getWeek() {
-        updateTime();
-        return (calendar.get(Calendar.WEEK_OF_YEAR) + LinkBotDB.shiftWeek) % 2;
+    @Contract(pure = true)
+    @Range(from = 1, to = MAX_CLASS_WEEKS)
+    public static int getClassWeek(@NotNull LocalDate date) {
+        return ((date.get(
+                WeekFields.of(
+                        Locale.getDefault()
+                ).weekOfWeekBasedYear()) + LinkBotDB.shiftWeek) % MAX_CLASS_WEEKS) + 1;
     }
 
-    public static int getDay() {
-        updateTime();
-        return calendar.get(Calendar.DAY_OF_WEEK) - 1;
+    @NotNull
+    @Contract("_ -> new")
+    public static List<Lesson> getDayLessons(@NotNull LocalDate date) {
+        return getDayLessons(getClassWeek(date), date.getDayOfWeek());
     }
 
-    public static List<Lesson> getDayLessons(final int week, final int day) {
-        final List<Lesson> lessons = new ArrayList<>();
-        for (Lesson lesson : KPI.lessons)
-            if (lesson.lesson_week == week + 1 && lesson.day_number == day)
-                lessons.add(lesson);
-        lessons.sort(null);
-        return lessons;
+    @NotNull
+    @Contract("_, _ -> new")
+    public static List<Lesson> getDayLessons(@Range(from = 1, to = MAX_CLASS_WEEKS) int classWeek,
+                                             @NotNull DayOfWeek dayOfWeek) {
+        return lessons.stream()
+                .filter(lesson -> lesson.lesson_week == classWeek &&
+                        lesson.day_number == dayOfWeek.getValue())
+                .sorted()
+                .toList();
     }
 
+    @NotNull
+    @Contract(" -> new")
     public static List<Lesson> getDayLessons() {
-        return getDayLessons(getWeek(), getDay());
+        return getDayLessons(nowDate());
+    }
+
+    @Contract(pure = true)
+    @Range(from = 0, to = Integer.MAX_VALUE)
+    public static int maxLessonNumber(@NotNull List<Lesson> lessons) {
+        return lessons.stream()
+                .map(lesson -> lesson.lesson_number)
+                .max(Integer::compare)
+                .orElse(0);
     }
 }
