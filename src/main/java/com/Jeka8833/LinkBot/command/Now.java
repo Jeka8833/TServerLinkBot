@@ -35,7 +35,7 @@ public class Now implements Command {
                     "Сегодня пар не будет, если хочешь узнать пару на следующий день, напиши /next");
         } else {
             StringBuilder sb = new StringBuilder("Расписание на " +
-                    Util.translateDayOfWeek(KPI.nowDate().getDayOfWeek()) + "\n");
+                    Util.translateDayOfWeek(KPI.nowDate().getDayOfWeek()) + ":\n");
 
             int maxLessonNumber = KPI.maxLessonNumber(lessons);
             for (int i = 1; i <= maxLessonNumber; i++) {

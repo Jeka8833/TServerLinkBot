@@ -83,7 +83,7 @@ public class Time implements Command {
         if (lessons == null || lessons.isEmpty()) return "Сегодня пар нет";
 
         final StringBuilder sb = new StringBuilder();
-        sb.append("Рассписание на ").append(Util.translateDayOfWeek(KPI.nowDate().getDayOfWeek())).append('\n');
+        sb.append("Рассписание на ").append(Util.translateDayOfWeek(KPI.nowDate().getDayOfWeek())).append(":\n");
         for (Lesson lesson : lessons) {
             sb.append(lesson.lesson_number).append(") ")
                     .append(lesson.lesson_name).append(" `")

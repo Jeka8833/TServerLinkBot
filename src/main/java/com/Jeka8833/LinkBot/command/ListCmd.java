@@ -38,7 +38,7 @@ public class ListCmd implements Command {
                 List<Lesson> dayLesson = KPI.getDayLessons(week, day);
                 if (dayLesson.isEmpty()) continue;
 
-                sb.append(Util.translateDayOfWeek(day)).append('\n');
+                sb.append(Util.translateDayOfWeek(day)).append(":\n");
 
                 for (Lesson lesson : dayLesson) {
                     sb.append(lesson.lesson_number).append(") ").append(lesson.lesson_name).append(" `")

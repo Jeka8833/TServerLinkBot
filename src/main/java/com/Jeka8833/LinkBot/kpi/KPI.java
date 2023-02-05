@@ -27,13 +27,13 @@ public class KPI {
     }
 
     @NotNull
-    @Contract(" -> new")
+    @Contract(pure = true, value = " -> new")
     public static LocalDate nowDate() {
         return LocalDate.now(ZONE_ID);
     }
 
     @NotNull
-    @Contract(" -> new")
+    @Contract(pure = true, value = " -> new")
     public static LocalTime nowTime() {
         return LocalTime.now(ZONE_ID);
     }

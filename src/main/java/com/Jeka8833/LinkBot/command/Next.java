@@ -10,6 +10,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,7 +55,7 @@ public class Next implements Command {
         }
 
         if (lessons.isEmpty()) {
-            if(dayShift == 0) {
+            if (dayShift == 0) {
                 Util.sendMessage(pollingBot, update.getMessage().getChatId() + "",
                         "А у тебя пары вообще существуют?");
             } else {
@@ -63,7 +64,7 @@ public class Next implements Command {
             }
         } else {
             StringBuilder sb = new StringBuilder("Расписание на " +
-                    Util.translateDayOfWeek(date.getDayOfWeek()) + "\n");
+                    Util.translateDayOfWeek(date.getDayOfWeek()) + " (" + date.format(DateTimeFormatter.ISO_LOCAL_DATE) + "):\n");
 
             int maxLessonNumber = KPI.maxLessonNumber(lessons);
             for (int i = 1; i <= maxLessonNumber; i++) {
