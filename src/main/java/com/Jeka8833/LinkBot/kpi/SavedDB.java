@@ -296,8 +296,8 @@ public class SavedDB {
                "teacher_name": "Шевлякова Г. В.",
                "lesson_type": "Прак",
                "lesson_class": "",
-               "time_start": "8:30:00",
-               "time_end": "10:05:00",
+               "time_start": "16:10:00",
+               "time_end": "17:45:00",
                "online": true,
                "choice": true
              },
