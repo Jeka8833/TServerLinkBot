@@ -290,7 +290,7 @@ public class SavedDB {
              {
                "lesson_id": 23,
                "day_number": 1,
-               "lesson_number": 1,
+               "lesson_number": 5,
                "lesson_week": 2,
                "lesson_name": "Структури даних",
                "teacher_name": "Шевлякова Г. В.",
