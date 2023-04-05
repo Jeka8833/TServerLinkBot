@@ -23,10 +23,15 @@ public class ListCmd implements Command {
     public void receiveListener(Update update, String text) {
         final User user = Util.getUser(update.getMessage().getChatId());
         if (user == null) {
-            Util.sendMessage(pollingBot, update.getMessage().getChatId() + "",
+            Util.sendMessage(pollingBot, String.valueOf(update.getMessage().getChatId()),
                     "Ты кто? Напиши '/start', а уже потом '/list'");
             return;
         }
+        String lowerArgs = text.toLowerCase();
+        boolean showHidden = !lowerArgs.contains("hide");
+        boolean showRootNumber = lowerArgs.contains("root");
+        boolean showLinks = !lowerArgs.contains("links");
+
         StringBuilder sb = new StringBuilder();
         int currentWeek = KPI.getClassWeek(KPI.nowDate());
         for (int week = 1; week <= KPI.MAX_CLASS_WEEKS; week++) {
@@ -41,31 +46,34 @@ public class ListCmd implements Command {
                 sb.append(Util.translateDayOfWeek(day)).append(":\n");
 
                 for (Lesson lesson : dayLesson) {
+                    if (!showHidden && user.isSkipLesson(lesson.lesson_id)) continue;
+
                     sb.append(lesson.lesson_number).append(") ").append(lesson.lesson_name).append(" `")
                             .append(lesson.lesson_type).append('`');
 
                     if (user.isSkipLesson(lesson.lesson_id)) {
                         sb.append(" [Skipping]");
                     }
-                    if (text.equalsIgnoreCase("root")) {
+                    if (showRootNumber) {
                         sb.append(" -> ").append(lesson.lesson_id);
                     }
                     sb.append('\n');
-
-                    if (lesson.online) {
-                        String link = LinkBotDB.urls.getOrDefault(lesson.lesson_id, "-");
-                        if (!(link.isBlank() || link.strip().equals("-"))) {
-                            sb.append("    > ").append(link).append("\n");
-                        }
-                    } else {
-                        if (!(lesson.lesson_class.isBlank() || lesson.lesson_class.strip().equals("-"))) {
-                            sb.append("    > ").append("Аудитория: ").append(lesson.lesson_class).append("\n");
+                    if (showLinks) {
+                        if (lesson.online) {
+                            String link = LinkBotDB.urls.getOrDefault(lesson.lesson_id, "-");
+                            if (!(link.isBlank() || link.strip().equals("-"))) {
+                                sb.append("    > ").append(link).append("\n");
+                            }
+                        } else {
+                            if (!(lesson.lesson_class.isBlank() || lesson.lesson_class.strip().equals("-"))) {
+                                sb.append("    > ").append("Аудитория: ").append(lesson.lesson_class).append("\n");
+                            }
                         }
                     }
                 }
                 sb.append('\n');
             }
         }
-        Util.sendMessage(pollingBot, update.getMessage().getChatId() + "", sb.toString());
+        Util.sendMessage(pollingBot, String.valueOf(update.getMessage().getChatId()), sb.toString());
     }
 }
