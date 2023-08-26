@@ -13,7 +13,7 @@ dependencies {
     implementation group: 'org.postgresql', name: 'postgresql', version: '42.6.0'
 
     // https://mvnrepository.com/artifact/org.telegram/telegrambots
-    implementation group: 'org.telegram', name: 'telegrambots', version: '6.5.0'
+    implementation group: 'org.telegram', name: 'telegrambots', version: '6.8.0'
 
     // Fix telegram vulnerability
     // https://mvnrepository.com/artifact/commons-codec/commons-codec
@@ -30,7 +30,7 @@ dependencies {
 }
 
 jar {
-    archivesBaseName="LinkBot"
+    archivesBaseName = "LinkBot"
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     manifest {
         attributes["Manifest-Version"] = "1.0"

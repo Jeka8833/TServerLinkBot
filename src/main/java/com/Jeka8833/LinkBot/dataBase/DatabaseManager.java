@@ -60,14 +60,6 @@ public class DatabaseManager {
 
     public static DatabaseManager db;
 
-    public static void initConnect(final String url) {
-        if (db != null) return; // Re-init protection
-
-        final String[] args = url.substring(11).split("[:@]", 3);
-        db = new DatabaseManager("jdbc:postgresql://" + args[2], args[0], args[1]);
-        db.connect();
-    }
-
     public static void initConnect(final String ipAndPort, final String user, final String password) {
         if (db != null) return; // Re-init protection
 

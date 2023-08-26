@@ -52,7 +52,7 @@ public class LinkBotDB {
     public static void write(final Table table) {
         DatabaseManager.db.checkConnect();
         switch (table) {
-            case SETTING:
+            case SETTING -> {
                 try {
                     DatabaseManager.db.statement.executeUpdate("INSERT INTO \"LB_Setting\" (\"Name\", \"Value\") " +
                             "VALUES ('weekShift', " + shiftWeek + "), ('notification', " + onNotification + ") " +
@@ -60,8 +60,8 @@ public class LinkBotDB {
                 } catch (Exception e) {
                     LOGGER.error("Fail write settings:", e);
                 }
-                break;
-            case LINK:
+            }
+            case LINK -> {
                 try {
                     var sqlRequest = new StringJoiner(",",
                             "INSERT INTO \"LB_Links\" (\"id\", \"link\") VALUES ",
@@ -73,8 +73,8 @@ public class LinkBotDB {
                 } catch (Exception e) {
                     LOGGER.error("Fail write links:", e);
                 }
-                break;
-            case NOTIFICATION:
+            }
+            case NOTIFICATION -> {
                 try {
                     var sqlRequest = new StringJoiner(",", "INSERT INTO \"LB_Users\" " +
                             "(\"id\", \"timeNotification\", \"isAdmin\", \"skipLesson\") VALUES ",
@@ -89,7 +89,7 @@ public class LinkBotDB {
                 } catch (Exception e) {
                     LOGGER.error("Fail write users:", e);
                 }
-                break;
+            }
         }
     }
 
