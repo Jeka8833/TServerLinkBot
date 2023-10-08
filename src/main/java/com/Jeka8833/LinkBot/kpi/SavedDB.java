@@ -33,7 +33,7 @@ public class SavedDB {
                "time_start": "10:25:00",
                "time_end": "12:00:00",
                "online": true,
-               "choice": false
+               "choice": true
              },
              {
                "lesson_id": 3,
@@ -47,7 +47,7 @@ public class SavedDB {
                "time_start": "12:20:00",
                "time_end": "13:55:00",
                "online": true,
-               "choice": false
+               "choice": true
              },
              {
                "lesson_id": 4,
@@ -285,7 +285,7 @@ public class SavedDB {
                "time_start": "10:25:00",
                "time_end": "12:00:00",
                "online": true,
-               "choice": false
+               "choice": true
              },
              {
                "lesson_id": 21,

@@ -29,6 +29,8 @@ dependencies {
     implementation group: 'org.jetbrains', name: 'annotations', version: '24.0.1'
 }
 
+compileJava {options.encoding = "UTF-8"}
+
 jar {
     archivesBaseName = "LinkBot"
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
