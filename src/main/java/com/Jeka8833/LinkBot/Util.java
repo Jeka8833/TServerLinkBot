@@ -15,7 +15,28 @@ import java.time.Duration;
 public class Util {
     private static final Logger LOGGER = LogManager.getLogger(Util.class);
 
-    public static void sendMessage(final TelegramLongPollingBot bot, final String chatId, final String text) {
+    public static void sendMessage(TelegramLongPollingBot bot, String chatId, String text) {
+        if (text.length() >= 4096) {
+            String[] lines = text.split("\n");
+
+            StringBuilder message = new StringBuilder();
+            for (String word : lines) {
+                if (message.length() + word.length() >= 4096) {
+                    sendSmallMessage(bot, chatId, message.toString());
+
+                    message.setLength(0);
+                }
+                message.append(word).append("\n");
+            }
+            if (!message.isEmpty()) {
+                sendSmallMessage(bot, chatId, message.toString());
+            }
+        } else {
+            sendSmallMessage(bot, chatId, text);
+        }
+    }
+
+    private static void sendSmallMessage(TelegramLongPollingBot bot, String chatId, String text) {
         var message = new SendMessage();
         message.setChatId(chatId);
         message.enableMarkdown(true);

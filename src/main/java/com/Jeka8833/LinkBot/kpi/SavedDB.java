@@ -134,20 +134,6 @@ public class SavedDB {
                "choice": true
              },
              {
-               "lesson_id": 10,
-               "day_number": 2,
-               "lesson_number": 5,
-               "lesson_week": 1,
-               "lesson_name": "Мікрохвильова техніка",
-               "teacher_name": "Тимофєєв Володимир Іванович",
-               "lesson_type": "Лаб",
-               "lesson_class": "-",
-               "time_start": "16:10:00",
-               "time_end": "17:45:00",
-               "online": true,
-               "choice": true
-             },
-             {
                "lesson_id": 11,
                "day_number": 3,
                "lesson_number": 1,
@@ -480,20 +466,6 @@ public class SavedDB {
                "lesson_class": "-",
                "time_start": "14:15:00",
                "time_end": "15:50:00",
-               "online": true,
-               "choice": true
-             },
-             {
-               "lesson_id": 35,
-               "day_number": 2,
-               "lesson_number": 5,
-               "lesson_week": 2,
-               "lesson_name": "Мікрохвильова техніка",
-               "teacher_name": "Тимофєєв Володимир Іванович",
-               "lesson_type": "Лаб",
-               "lesson_class": "-",
-               "time_start": "16:10:00",
-               "time_end": "17:45:00",
                "online": true,
                "choice": true
              },
